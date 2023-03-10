@@ -1,8 +1,7 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
-import { SequelizeValidationException } from 'src/exceptions/sequelize-validation-exception/sequelize-validation-exception';
+import { SequelizeValidationException } from 'src/exceptions/sequelize-validation/sequelize-validation.exception';
 import { RegisterUserDTO } from './dto/in/register-user.dto';
 import { User } from './user.entity';
-import { v4 } from 'uuid';
 
 @Injectable()
 export class UserService {

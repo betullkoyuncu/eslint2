@@ -3,12 +3,19 @@ import {
   Catch,
   ExceptionFilter,
   HttpStatus,
+  Inject,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { SequelizeValidationException } from 'src/exceptions/sequelize-validation-exception/sequelize-validation-exception';
+import { SequelizeValidationException } from 'src/exceptions/sequelize-validation/sequelize-validation.exception';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 @Catch(SequelizeValidationException)
 export class SequelizeValidationExceptionFilter<T> implements ExceptionFilter {
+  constructor(
+    @Inject(WINSTON_MODULE_NEST_PROVIDER) private readonly logger: Logger,
+  ) {}
+
   catch(exception: SequelizeValidationException, host: ArgumentsHost) {
     const response = host.switchToHttp().getResponse<Response>();
 

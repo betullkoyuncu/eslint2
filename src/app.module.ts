@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { I18nModule } from 'nestjs-i18n';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -6,10 +11,53 @@ import { DatabaseModule } from './database/database.module';
 import { UserModule } from './modules/user/user.module';
 import * as path from 'path';
 import { HeaderResolver } from 'nestjs-i18n/dist/resolvers/header.resolver';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
+import 'winston-daily-rotate-file';
+import { HttpExceptionFilter } from './filters/http-exception/http-exception.filter';
+import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
+
+const sensitiveKeys = ['password'];
+
+const replaceSensitiveData = (data: any) => {
+  if (Array.isArray(data)) {
+    return data.map(replaceSensitiveData);
+  } else if (typeof data === 'object') {
+    return Object.entries(data).reduce((obj, [key, val]) => {
+      if (!['string', 'number'].includes(typeof val))
+        obj[key] = replaceSensitiveData(val);
+      else if (sensitiveKeys.includes(key)) obj[key] = '******';
+      else obj[key] = val;
+      return obj;
+    }, {});
+  }
+  return data;
+};
 
 @Module({
   imports: [
     DatabaseModule,
+    WinstonModule.forRoot({
+      transports: [
+        new winston.transports.DailyRotateFile({
+          dirname: 'logs',
+          filename: '%DATE%.log',
+          datePattern: 'YYYY-MM-DD',
+          zippedArchive: true,
+          maxSize: '20m',
+          maxFiles: '14d',
+          format: winston.format.combine(
+            winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+            winston.format.json(),
+            winston.format.printf((info) => {
+              const res = { ...info };
+              res.stack = replaceSensitiveData(res.stack);
+              return JSON.stringify(res);
+            }),
+          ),
+        }),
+      ],
+    }),
     I18nModule.forRoot({
       fallbackLanguage: 'en_US',
       fallbacks: {
@@ -34,4 +82,11 @@ import { HeaderResolver } from 'nestjs-i18n/dist/resolvers/header.resolver';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes({
+      path: '*',
+      method: RequestMethod.ALL,
+    });
+  }
+}
