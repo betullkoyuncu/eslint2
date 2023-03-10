@@ -8,9 +8,15 @@ import {
   DataType,
   CreatedAt,
   UpdatedAt,
+  BelongsToMany,
+  HasMany,
 } from 'sequelize-typescript';
 import { literal } from 'sequelize';
 import { pbkdf2Sync, randomBytes } from 'crypto';
+import { UserRelationship } from '../user-relationship/relationship.entity';
+import { Article } from '../article/article.entity';
+import { ArticleBookmark } from 'src/modules/article-bookmark/article-bookmark.entity';
+import { v4 } from 'uuid';
 
 @Table
 export class User extends Model {
@@ -28,6 +34,13 @@ export class User extends Model {
     allowNull: false,
   })
   email: string;
+
+  @Column({
+    type: DataType.STRING(50),
+    unique: 'slug',
+    allowNull: false,
+  })
+  slug: string;
 
   @Column({
     type: DataType.STRING(32),
@@ -98,6 +111,10 @@ export class User extends Model {
     this.hash = hash.toString('hex');
   }
 
+  generateSlug() {
+    this.slug = v4();
+  }
+
   validatePassword(password: string) {
     const hash = pbkdf2Sync(password, this.salt, 1_000, 64, 'sha256');
     return this.hash === hash.toString('hex');
@@ -114,4 +131,13 @@ export class User extends Model {
       profile: this.profile,
     };
   }
+
+  @HasMany(() => UserRelationship)
+  followers: UserRelationship[];
+
+  @HasMany(() => UserRelationship)
+  followings: UserRelationship[];
+
+  @BelongsToMany(() => Article, () => ArticleBookmark)
+  bookmarked: Article[];
 }

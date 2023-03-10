@@ -1,0 +1,5 @@
+{
+  "invalidEmail": "invalid email format",
+  "length": "length must between {min} to {max}",
+  "maxLength": "length must smaller ro equal to {val}"
+}

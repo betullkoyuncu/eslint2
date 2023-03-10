@@ -1,0 +1,5 @@
+{
+  "invalidEmail": "錯誤的電郵格式",
+  "length": "長度必須為{min}至{max}",
+  "maxLength": "最大長度必須小於或等於{val}"
+}
