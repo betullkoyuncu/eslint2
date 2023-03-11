@@ -49,9 +49,8 @@ export class User extends Model {
   salt: string;
 
   @Column({
-    type: DataType.STRING(128),
+    type: DataType.STRING(256),
     allowNull: false,
-    field: 'hash',
   })
   hash: string;
 
@@ -103,20 +102,20 @@ export class User extends Model {
   /** custom hooks */
 
   /** custom functions */
-  setPassword(password: string) {
-    const salt = randomBytes(16);
-    const hash = pbkdf2Sync(password, salt, 1_000, 64, 'sha256');
-
-    this.salt = salt.toString('hex');
-    this.hash = hash.toString('hex');
-  }
-
   generateSlug() {
     this.slug = v4();
   }
 
+  setPassword(password: string) {
+    const salt = randomBytes(16).toString('hex');
+    const hash = pbkdf2Sync(password, salt, 1_000, 128, 'sha256');
+
+    this.salt = salt;
+    this.hash = hash.toString('hex');
+  }
+
   validatePassword(password: string) {
-    const hash = pbkdf2Sync(password, this.salt, 1_000, 64, 'sha256');
+    const hash = pbkdf2Sync(password, this.salt, 1_000, 128, 'sha256');
     return this.hash === hash.toString('hex');
   }
 

@@ -14,8 +14,8 @@ import { HeaderResolver } from 'nestjs-i18n/dist/resolvers/header.resolver';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
-import { HttpExceptionFilter } from './filters/http-exception/http-exception.filter';
 import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
+import { AuthModule } from './modules/auth/auth.module';
 
 const sensitiveKeys = ['password'];
 
@@ -78,6 +78,7 @@ const replaceSensitiveData = (data: any) => {
       typesOutputPath: path.join(__dirname, '../src/i18n/i18n.typed.ts'),
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,9 +1,4 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  Inject,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, Inject } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions';
 import { Request, Response } from 'express';
 import { I18nContext } from 'nestjs-i18n';
@@ -22,7 +17,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = host.switchToHttp().getRequest<Request>();
     const response = host.switchToHttp().getResponse<Response>();
     const i18n = I18nContext.current<I18nTranslations>(host);
-    
+
     this.logger.error(exception.message, {
       status: exception.getStatus(),
       ...getRequestInfo(request),

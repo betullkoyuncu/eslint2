@@ -16,7 +16,7 @@ export const databaseProviders: Provider[] = [
         username: 'root',
         password: '!Password',
         database: 'tweeter',
-        timezone: '+08:00'
+        timezone: '+08:00',
       });
       sequelize.addModels([User, UserRelationship, Article, ArticleBookmark]);
       await sequelize.sync({ alter: true });

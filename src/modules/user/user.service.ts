@@ -17,8 +17,20 @@ export class UserService {
       throw new SequelizeValidationException(UserService.name, error);
     }
     try {
-      const user = await userBuild.save({});
-      return user.toAuthJSON();
+      await userBuild.save();
+      return {
+        id: userBuild.id,
+        email: userBuild.email,
+      };
+    } catch (error) {
+      throw new HttpException(UserService.name, 500, { cause: error });
+    }
+  }
+
+  async findOneByEmail(email: string) {
+    const user = await this.userRepo.findOne({ where: { email } });
+    try {
+      return user;
     } catch (error) {
       throw new HttpException(UserService.name, 500, { cause: error });
     }
