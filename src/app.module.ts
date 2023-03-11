@@ -18,6 +18,8 @@ import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { ArticleModule } from './modules/article/article.module';
 import { MediaModule } from './modules/media/media.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 const sensitiveKeys = ['password'];
 
@@ -78,6 +80,12 @@ const replaceSensitiveData = (data: any) => {
         },
       ],
       typesOutputPath: path.join(__dirname, '../src/i18n/i18n.typed.ts'),
+    }),
+    MulterModule.register({
+      dest: path.join(__dirname, '../uploads'),
+      // storage: diskStorage({
+      //   destination: path.join(__dirname, '../uploads'),
+      // }),
     }),
     UserModule,
     AuthModule,
