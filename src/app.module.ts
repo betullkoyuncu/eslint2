@@ -16,6 +16,8 @@ import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
 import { AuthModule } from './modules/auth/auth.module';
+import { ArticleModule } from './modules/article/article.module';
+import { MediaModule } from './modules/media/media.module';
 
 const sensitiveKeys = ['password'];
 
@@ -79,6 +81,8 @@ const replaceSensitiveData = (data: any) => {
     }),
     UserModule,
     AuthModule,
+    ArticleModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

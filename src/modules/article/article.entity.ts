@@ -14,6 +14,8 @@ import {
 } from 'sequelize-typescript';
 import { literal } from 'sequelize';
 import { User } from '../user/user.entity';
+import { v4 } from 'uuid';
+import { JwtPayload } from 'src/shared/interfaces';
 
 @Table
 export class Article extends Model {
@@ -59,4 +61,13 @@ export class Article extends Model {
     field: 'updated_at',
   })
   updatedAt: Date;
+
+  /** custom functions */
+  generateUuid = () => {
+    this.slug = v4();
+  };
+
+  addWriter = (user: JwtPayload) => {
+    this.writerId = user.id;
+  };
 }
