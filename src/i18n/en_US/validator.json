@@ -1,0 +1,5 @@
+{
+  "isEmail": "email format is invalid",
+  "length": "{property} must contains {min} to {max} characters",
+  "isString": "{property} must be string"
+}
