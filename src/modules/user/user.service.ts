@@ -1,21 +1,25 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { SequelizeValidationException } from 'src/exceptions/sequelize-validation/sequelize-validation.exception';
-import { RegisterUserDTO } from './dto/in/register-user.dto';
-import { User } from './user.entity';
+import { UserRegisterDTO } from './dto/in/user-register.dto';
+import { UserModel } from './user.model';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject(User.name) private readonly userRepo: typeof User) {}
+  constructor(
+    @Inject(UserModel.name) private readonly userRepo: typeof UserModel,
+  ) {}
 
-  async register(registerUserDTO: RegisterUserDTO) {
-    const userBuild = this.userRepo.build({ ...registerUserDTO });
-    userBuild.setPassword(registerUserDTO.password);
-    userBuild.generateSlug();
+  async register(userRegisterDTO: UserRegisterDTO) {
+    const userBuild = this.userRepo.build({ ...userRegisterDTO });
+    userBuild.setPassword(userRegisterDTO.password);
+    userBuild.setSlug();
+
     try {
       await userBuild.validate();
     } catch (error) {
       throw new SequelizeValidationException(UserService.name, error);
     }
+
     try {
       await userBuild.save();
       return {
@@ -28,8 +32,8 @@ export class UserService {
   }
 
   async findOneByEmail(email: string) {
-    const user = await this.userRepo.findOne({ where: { email } });
     try {
+      const user = await this.userRepo.findOne({ where: { email } });
       return user;
     } catch (error) {
       throw new HttpException(UserService.name, 500, { cause: error });

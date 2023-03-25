@@ -1,6 +1,6 @@
-import { User } from 'src/modules/user/user.entity';
+import { UserModel } from 'src/modules/user/user.model';
 
-export type JwtPayload = ReturnType<User['toAuthJSON']> & {
+export type JwtPayload = ReturnType<UserModel['toAuthJson']> & {
   // in seconds
   iat: number;
 

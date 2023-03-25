@@ -25,7 +25,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new ForbiddenException(JwtStrategy.name, {
         cause: new Error('user not found'),
       });
-    } else if (new Date(user.pwdModifiedAt).getTime() > payload.iat * 1_000) {
+    } else if (
+      new Date(user.passwordChangedAt).getTime() >
+      payload.iat * 1_000
+    ) {
       throw new UnauthorizedException(JwtStrategy.name, {
         cause: new Error('password changed'),
       });

@@ -1,13 +1,10 @@
 import { Provider } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
-import { ArticleBookmark } from 'src/modules/article-bookmark/article-bookmark.entity';
-import { Article } from 'src/modules/article/article.entity';
-import { UserRelationship } from 'src/modules/user-relationship/relationship.entity';
-import { User } from 'src/modules/user/user.entity';
+import { UserModel } from 'src/modules/user/user.model';
 
 export const databaseProviders: Provider[] = [
   {
-    provide: 'SEQUELIZE',
+    provide: Sequelize.name,
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'mysql',
@@ -18,7 +15,7 @@ export const databaseProviders: Provider[] = [
         database: 'tweeter',
         timezone: '+08:00',
       });
-      sequelize.addModels([User, UserRelationship, Article, ArticleBookmark]);
+      sequelize.addModels([UserModel]);
       await sequelize.sync({ alter: false });
       return sequelize;
     },
