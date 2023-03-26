@@ -62,7 +62,7 @@ export class UserModel extends Model {
   @Column({
     type: DataType.DATE,
     allowNull: false,
-    onUpdate: String(literal('CURRENT_TIMESTAMP')),
+    defaultValue: literal('CURRENT_TIMESTAMP'),
     field: 'updated_at',
   })
   updatedAt: Date;
@@ -116,14 +116,17 @@ export class UserModel extends Model {
     );
     this.slat = slat;
     this.hash = hash;
-    return {
-      slat,
-      hash,
-    };
+    return this;
   }
 
   setSlug() {
     this.slug = uuidv4();
+    return this;
+  }
+
+  setNickname() {
+    this.nickname = this.nickname ?? this.email.split('@')[0].slice(0, 30);
+    return this;
   }
 
   validatePassword(password: string) {

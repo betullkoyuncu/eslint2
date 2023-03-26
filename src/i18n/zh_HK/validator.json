@@ -1,5 +1,7 @@
 {
   "isEmail": "email format is invalid",
   "length": "{property} must contains {min} to {max} characters",
-  "isString": "{property} must be string"
+  "isString": "{property} must be string",
+  "passwordFormat": "{property} should contains at least one special character, one number and one english character",
+  "byteSize": "{property} excceed the size in byte ({max})"
 }

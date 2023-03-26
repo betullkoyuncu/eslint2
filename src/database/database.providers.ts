@@ -16,7 +16,7 @@ export const databaseProviders: Provider[] = [
         timezone: '+08:00',
       });
       sequelize.addModels([UserModel]);
-      await sequelize.sync({ alter: false });
+      await sequelize.sync({ alter: true });
       return sequelize;
     },
   },

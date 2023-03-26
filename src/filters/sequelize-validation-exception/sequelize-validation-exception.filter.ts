@@ -7,13 +7,13 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { SequelizeValidationException } from 'src/exceptions/sequelize-validation/sequelize-validation.exception';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { Logger } from 'winston';
+import { WinstonLogger, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 @Catch(SequelizeValidationException)
-export class SequelizeValidationExceptionFilter<T> implements ExceptionFilter {
+export class SequelizeValidationExceptionFilter implements ExceptionFilter {
   constructor(
-    @Inject(WINSTON_MODULE_NEST_PROVIDER) private readonly logger: Logger,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: WinstonLogger,
   ) {}
 
   catch(exception: SequelizeValidationException, host: ArgumentsHost) {
@@ -21,11 +21,20 @@ export class SequelizeValidationExceptionFilter<T> implements ExceptionFilter {
 
     const errors = exception.error.errors;
 
+    console.log(errors);
+
     const errorObject = errors.reduce<Record<string, string[]>>((obj, item) => {
       if (!obj[item.path]) obj[item.path] = [];
       obj[item.path].push(item.type);
       return obj;
     }, {});
+
+    this.logger.error({
+      message: {
+        type: SequelizeValidationExceptionFilter.name,
+        error: errorObject,
+      },
+    });
 
     return response.status(HttpStatus.UNPROCESSABLE_ENTITY).json(errorObject);
   }

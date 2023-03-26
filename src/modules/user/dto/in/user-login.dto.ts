@@ -1,13 +1,7 @@
-import {
-  IsEmail,
-  IsOptional,
-  IsString,
-  Length,
-  Matches,
-} from 'class-validator';
+import { IsEmail, IsString, Length, Matches } from 'class-validator';
 import { i18nValidationMessage } from 'nestjs-i18n';
 
-export class UserRegisterDTO {
+export class UserLoginDTO {
   @IsEmail(
     {},
     {
@@ -26,15 +20,4 @@ export class UserRegisterDTO {
     message: 'validator.isString',
   })
   password: string;
-
-  @IsOptional()
-  @IsString({
-    message: 'validator.isString',
-  })
-  nickname?: string;
-
-  //   @ValidateNested()
-  //   @IsDefined()
-  //   @Type(() => DTOType)
-  //   extra: ExtraDTO
 }

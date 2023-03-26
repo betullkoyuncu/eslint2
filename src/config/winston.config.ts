@@ -6,6 +6,8 @@ const sensitiveKeys = ['password'];
 const replaceSensitiveData = (data: any) => {
   if (Array.isArray(data)) {
     return data.map(replaceSensitiveData);
+  } else if (!data) {
+    return data;
   } else if (typeof data === 'object') {
     return Object.entries(data).reduce((obj, [key, val]) => {
       if (!['string', 'number'].includes(typeof val))
@@ -28,11 +30,21 @@ export const winstonTransports: winston.LoggerOptions['transports'] = [
     maxFiles: '14d',
     format: winston.format.combine(
       winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-      winston.format.json(),
+      winston.format.json({
+        replacer(key, value) {
+          if (sensitiveKeys.includes(key)) {
+            return '******';
+          }
+          return value;
+        },
+      }),
       winston.format.printf((info) => {
         const res = { ...info };
-        res.stack = replaceSensitiveData(res.stack);
-        return JSON.stringify(res);
+        return JSON.stringify({
+          level: res.level,
+          timestamp: res.timestamp,
+          message: replaceSensitiveData(res.message),
+        });
       }),
     ),
   }),

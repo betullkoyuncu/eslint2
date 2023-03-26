@@ -2,10 +2,12 @@
 
 import { Path } from "nestjs-i18n";
 export type I18nTranslations = {
-    "validation": {
-        "invalidEmail": string;
+    "validator": {
+        "isEmail": string;
         "length": string;
-        "maxLength": string;
+        "isString": string;
+        "passwordFormat": string;
+        "byteSize": string;
     };
 };
 export type I18nPath = Path<I18nTranslations>;
