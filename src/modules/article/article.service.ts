@@ -1,8 +1,12 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ServiceError } from 'src/classes/ServiceError';
 import { SequelizeValidationException } from 'src/exceptions/sequelize-validation/sequelize-validation.exception';
 import { JwtPayload } from 'src/shared/interfaces';
-import { ArticleTagMapModel } from '../article-tag-map/article-tag-map.model';
 import { ArticleTagMapService } from '../article-tag-map/article-tag-map.service';
 import { TagService } from '../tag/tag.service';
 import { ArticleModel } from './article.model';
@@ -31,6 +35,44 @@ export class ArticleService {
         id: saved.id,
         slug: saved.slug,
       };
+    } catch (error) {
+      throw new SequelizeValidationException(ArticleService.name, error);
+    }
+  }
+
+  async findAll() {}
+
+  async findArticleById(id: number) {
+    try {
+      const article = await this.articleRepo.findOne({ where: { id } });
+      if (!article)
+        throw new BadRequestException(ArticleService.name, {
+          cause: new ServiceError('Article Not Found', {
+            key: 'error.notFound',
+            args: {
+              obj: 'article',
+            },
+          }),
+        });
+      return article;
+    } catch (error) {
+      throw new SequelizeValidationException(ArticleService.name, error);
+    }
+  }
+
+  async findArticleBySlug(slug: string) {
+    try {
+      const article = await this.articleRepo.findOne({ where: { slug } });
+      if (!article)
+        throw new BadRequestException(ArticleService.name, {
+          cause: new ServiceError('Article Not Found', {
+            key: 'error.notFound',
+            args: {
+              obj: 'article',
+            },
+          }),
+        });
+      return article;
     } catch (error) {
       throw new SequelizeValidationException(ArticleService.name, error);
     }
