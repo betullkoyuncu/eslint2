@@ -1,15 +1,9 @@
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { I18nModule } from 'nestjs-i18n';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { WinstonModule } from 'nest-winston';
-// import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
 import { AuthModule } from './modules/auth/auth.module';
 import { MediaModule } from './modules/media/media.module';
 import { MulterModule } from '@nestjs/platform-express';
@@ -17,7 +11,9 @@ import { winstonTransports } from './config/winston.config';
 import { i18nOptions } from './config/i18n.config';
 import { multerOptions } from './config/multer.config';
 import { UserModule } from './modules/user/user.module';
-// import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { ArticleModule } from './modules/article/article.module';
+import { TagModule } from './modules/tag/tag.module';
+import { ArticleTagMapModule } from './modules/article-tag-map/article-tag-map.module';
 
 @Module({
   imports: [
@@ -30,6 +26,9 @@ import { UserModule } from './modules/user/user.module';
     AuthModule,
     MediaModule,
     UserModule,
+    ArticleModule,
+    TagModule,
+    ArticleTagMapModule,
   ],
   controllers: [AppController],
   providers: [AppService],
