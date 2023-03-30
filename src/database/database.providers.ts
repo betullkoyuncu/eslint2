@@ -3,6 +3,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { ArticleTagMapModel } from 'src/modules/article-tag-map/article-tag-map.model';
 import { ArticleModel } from 'src/modules/article/article.model';
 import { TagModel } from 'src/modules/tag/tag.model';
+import { UserFollowingModel } from 'src/modules/user-following/user-following.model';
 import { UserModel } from 'src/modules/user/user.model';
 
 export const databaseProviders: Provider[] = [
@@ -21,6 +22,7 @@ export const databaseProviders: Provider[] = [
         });
         sequelize.addModels([
           UserModel,
+          UserFollowingModel,
           ArticleModel,
           TagModel,
           ArticleTagMapModel,

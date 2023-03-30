@@ -14,6 +14,7 @@ import { UserModule } from './modules/user/user.module';
 import { ArticleModule } from './modules/article/article.module';
 import { TagModule } from './modules/tag/tag.module';
 import { ArticleTagMapModule } from './modules/article-tag-map/article-tag-map.module';
+import { UserFollowingModule } from './modules/user-following/user-following.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ArticleTagMapModule } from './modules/article-tag-map/article-tag-map.m
     ArticleModule,
     TagModule,
     ArticleTagMapModule,
+    UserFollowingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

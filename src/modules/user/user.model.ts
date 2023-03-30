@@ -4,12 +4,15 @@ import {
   AutoIncrement,
   Column,
   DataType,
+  HasMany,
   Index,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
 import { v4 as uuidv4 } from 'uuid';
+import { ArticleModel } from '../article/article.model';
+import { UserFollowingModel } from '../user-following/user-following.model';
 
 @Table({
   tableName: 'users',
@@ -157,4 +160,10 @@ export class UserModel extends Model {
       createdAt: this.createdAt,
     };
   }
+
+  @HasMany(() => ArticleModel)
+  writtenArticles: ArticleModel[];
+
+  @HasMany(() => UserFollowingModel)
+  followings: UserModel[];
 }
