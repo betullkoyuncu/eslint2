@@ -1,6 +1,8 @@
 import { literal } from 'sequelize';
 import {
   AutoIncrement,
+  BelongsTo,
+  BelongsToMany,
   Column,
   CreatedAt,
   DataType,
@@ -11,6 +13,8 @@ import {
   UpdatedAt,
 } from 'sequelize-typescript';
 import { v4 } from 'uuid';
+import { ArticleTagMapModel } from '../article-tag-map/article-tag-map.model';
+import { TagModel } from '../tag/tag.model';
 import { UserModel } from '../user/user.model';
 
 @Table({
@@ -20,6 +24,7 @@ import { UserModel } from '../user/user.model';
     include: [
       {
         model: UserModel,
+        as: 'writer',
       },
     ],
   },
@@ -74,4 +79,10 @@ export class ArticleModel extends Model {
   setSlug() {
     this.slug = v4();
   }
+
+  @BelongsTo(() => UserModel)
+  writer: UserModel;
+
+  @BelongsToMany(() => TagModel, () => ArticleTagMapModel)
+  tags: TagModel[];
 }

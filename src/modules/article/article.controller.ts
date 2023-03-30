@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { JwtUser } from 'src/decorators/jwt-user/jwt-user.decorator';
 import { JwtPayload } from 'src/shared/interfaces';
 import { ArticleService } from './article.service';
 import { ArticleCreateDTO } from './dto/in/article-create.dto';
+import { ArticleQueryPostDTO } from './dto/in/article-query-post.dto';
+import { ArticleQueryDTO } from './dto/in/article-query.dto';
 
 @Controller('api/article/v1')
 export class ArticleController {
@@ -15,6 +16,16 @@ export class ArticleController {
     @JwtUser() jwtUser: JwtPayload,
   ) {
     return this.articleService.createArticle(articleCreateDTO, jwtUser);
+  }
+
+  @Get()
+  async findArticles(@Query() query: ArticleQueryDTO) {
+    return this.articleService.findAll(query);
+  }
+
+  @Post('list')
+  async findArticlesByPost(@Body() body: ArticleQueryPostDTO) {
+    return this.articleService.findAll(body);
   }
 
   @Get(':id')

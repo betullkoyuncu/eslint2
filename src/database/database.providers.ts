@@ -1,23 +1,35 @@
 import { Provider } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
+import { ArticleTagMapModel } from 'src/modules/article-tag-map/article-tag-map.model';
+import { ArticleModel } from 'src/modules/article/article.model';
+import { TagModel } from 'src/modules/tag/tag.model';
 import { UserModel } from 'src/modules/user/user.model';
 
 export const databaseProviders: Provider[] = [
   {
     provide: Sequelize.name,
     useFactory: async () => {
-      const sequelize = new Sequelize({
-        dialect: 'mysql',
-        host: 'localhost',
-        port: 3306,
-        username: 'root',
-        password: '!Password',
-        database: 'tweeter',
-        timezone: '+08:00',
-      });
-      sequelize.addModels([UserModel]);
-      await sequelize.sync({ alter: true });
-      return sequelize;
+      try {
+        const sequelize = new Sequelize({
+          dialect: 'mysql',
+          host: 'localhost',
+          port: 3306,
+          username: 'root',
+          password: '!Password',
+          database: 'tweeter',
+          timezone: '+08:00',
+        });
+        sequelize.addModels([
+          UserModel,
+          ArticleModel,
+          TagModel,
+          ArticleTagMapModel,
+        ]);
+        await sequelize.sync({ force: true });
+        return sequelize;
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
 ];

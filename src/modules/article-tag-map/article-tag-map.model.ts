@@ -1,5 +1,10 @@
-import { Model } from 'sequelize';
-import { Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
+import {
+  Column,
+  DataType,
+  ForeignKey,
+  Table,
+  Model,
+} from 'sequelize-typescript';
 import { ArticleModel } from '../article/article.model';
 import { TagModel } from '../tag/tag.model';
 
@@ -13,7 +18,6 @@ export class ArticleTagMapModel extends Model {
     allowNull: false,
   })
   articleId: number;
-
   @ForeignKey(() => TagModel)
   @Column({
     type: DataType.BIGINT,

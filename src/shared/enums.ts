@@ -5,3 +5,8 @@ export const ArticleStatusEnum = {
   hidden: '3',
   penddingToDelete: '4',
 } as const;
+
+export const SorterDirectionEnum = {
+  desc: 'desc',
+  asc: 'asc',
+} as const;

@@ -1,20 +1,34 @@
-import { Type } from 'class-transformer';
-import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
+// import { Transform } from 'class-transformer';
+import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
+import { QueryBaseDTO } from 'src/shared/dto/in/QueryBaseDTO';
+import { SorterBaseDTO } from 'src/shared/dto/in/SorterBaseDTO';
+import { SorterDirectionEnum } from 'src/shared/enums';
 
-export class ArticleQueryDTO {
+export class ArticleQueryDTO extends QueryBaseDTO implements SorterBaseDTO {
   @IsOptional()
   @IsString()
   keyword?: string;
 
   @IsOptional()
   @IsDateString()
-  beginDate?: number;
+  beginDate?: string;
 
   @IsOptional()
   @IsDateString()
-  endDate?: number;
+  endDate?: string;
+
+  // @IsOptional()
+  // @Transform(({ value }) => value.toString().split(',').map(Number))
+  // tagIds?: number[];
+
+  // @IsOptional()
+  // @Transform(({ value }) => value.toString().split(',').map(Number))
+  // writerIds?: number[];
+
+  @IsString()
+  sortBy: string;
 
   @IsOptional()
-  @IsNumber({}, { each: true })
-  tagIds?: number[];
+  @IsEnum(SorterDirectionEnum)
+  sortDir?: 'desc' | 'asc';
 }
