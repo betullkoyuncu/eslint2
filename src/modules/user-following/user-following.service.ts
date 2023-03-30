@@ -4,15 +4,69 @@ import {
   Injectable,
   NotImplementedException,
 } from '@nestjs/common';
+import { QueryTypes } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 import { SequelizeValidationException } from 'src/exceptions/sequelize-validation/sequelize-validation.exception';
+import { Pagination } from 'src/shared/interfaces';
 import { UserFollowingModel } from './user-following.model';
 
 @Injectable()
 export class UserFollowingService {
   constructor(
+    @Inject(Sequelize.name)
+    private readonly conn: Sequelize,
     @Inject(UserFollowingModel.name)
     private readonly followingRepo: typeof UserFollowingModel,
   ) {}
+
+  async listFollowings(userId: number, pagination?: Pagination) {
+    const { limit = 20, offset = 0 } = pagination;
+    try {
+      const followings = await this.followingRepo.findAndCountAll({
+        where: { userId },
+        limit,
+        offset,
+      });
+      return followings;
+    } catch (error) {
+      throw new SequelizeValidationException(UserFollowingService.name, error);
+    }
+  }
+
+  async listFollowers(userId: number, pagination?: Pagination) {
+    const { limit = 20, offset = 0 } = pagination;
+    try {
+      const followers = await this.followingRepo.findAndCountAll({
+        where: { followingId: userId },
+        limit,
+        offset,
+      });
+      return followers;
+    } catch (error) {
+      throw new SequelizeValidationException(UserFollowingService.name, error);
+    }
+  }
+
+  async getCount(userId: number) {
+    try {
+      const [results] = await this.conn.query(
+        `SELECT 
+        (
+          SELECT COUNT(*) FROM user_followings where userId = ${userId}
+        ) as followings,
+        (
+          SELECT COUNT(*) FROM user_followings where followingId = ${userId}
+        ) as followers
+        `,
+        {
+          type: QueryTypes.SELECT,
+        },
+      );
+      return results as { followings: number; followers: number };
+    } catch (error) {
+      throw new SequelizeValidationException(UserFollowingService.name, error);
+    }
+  }
 
   async following(userId: number, followingId: number) {
     try {

@@ -27,7 +27,7 @@ export const databaseProviders: Provider[] = [
           TagModel,
           ArticleTagMapModel,
         ]);
-        await sequelize.sync({ force: true });
+        await sequelize.sync({ alter: true });
         return sequelize;
       } catch (error) {
         console.error(error);

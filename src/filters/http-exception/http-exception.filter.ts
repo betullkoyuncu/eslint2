@@ -25,6 +25,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       },
     });
 
-    return response.status(exception.getStatus()).send('Internal Server Error');
+    return response.status(exception.getStatus()).send(exception.getResponse());
   }
 }

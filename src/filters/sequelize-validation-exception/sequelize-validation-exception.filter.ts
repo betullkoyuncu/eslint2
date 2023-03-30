@@ -21,7 +21,11 @@ export class SequelizeValidationExceptionFilter implements ExceptionFilter {
 
     const errors = exception.error.errors;
 
-    console.log(errors);
+    if (!errors) {
+      return response
+        .status(exception.getStatus())
+        .json(exception.getResponse());
+    }
 
     const errorObject = errors.reduce<Record<string, string[]>>((obj, item) => {
       if (!obj[item.path]) obj[item.path] = [];

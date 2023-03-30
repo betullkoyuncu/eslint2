@@ -157,6 +157,7 @@ export class UserModel extends Model {
       id: this.id,
       nickname: this.nickname,
       icon: this.icon,
+      backgroundImage: this.backgroundImage,
       createdAt: this.createdAt,
     };
   }

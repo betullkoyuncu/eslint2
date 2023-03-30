@@ -7,3 +7,8 @@ export type JwtPayload = ReturnType<UserModel['toAuthJson']> & {
   // in seconds
   exp: number;
 };
+
+export interface Pagination {
+  limit?: number;
+  offset?: number;
+}

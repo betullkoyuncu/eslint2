@@ -24,7 +24,6 @@ import { UserModel } from '../user/user.model';
     include: [
       {
         model: UserModel,
-        as: 'writer',
       },
     ],
   },

@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { SequelizeValidationException } from 'src/exceptions/sequelize-validation/sequelize-validation.exception';
 import { JwtPayload } from 'src/shared/interfaces';
+import { UserFollowingModel } from '../user-following/user-following.model';
 import { UserFollowingService } from '../user-following/user-following.service';
 import { UserRegisterDTO } from './dto/in/user-register.dto';
 import { UserUpdateDTO } from './dto/in/user-update.dto';
@@ -23,6 +24,50 @@ export class UserService {
         id: userBuild.id,
         email: userBuild.email,
       };
+    } catch (error) {
+      throw new SequelizeValidationException(UserService.name, error);
+    }
+  }
+
+  async findOneById(userId: number) {
+    try {
+      const user = await this.userRepo.findOne({
+        where: { id: userId },
+      });
+      return user;
+    } catch (error) {
+      throw new SequelizeValidationException(UserService.name, error);
+    }
+  }
+
+  async findOneBySlug(slug: string) {
+    try {
+      const user = await this.userRepo.findOne({
+        where: { slug },
+      });
+      return user;
+    } catch (error) {
+      throw new SequelizeValidationException(UserService.name, error);
+    }
+  }
+
+  async findUserDetails(userId: number, currentUserId?: number) {
+    try {
+      const [counts, user] = await Promise.all([
+        this.followingService.getCount(userId),
+        this.findOneById(userId),
+      ]);
+      if (currentUserId === userId) {
+        return {
+          user: user.toAuthJson(),
+          counts,
+        };
+      } else {
+        return {
+          user: user.toPublicJson(),
+          counts,
+        };
+      }
     } catch (error) {
       throw new SequelizeValidationException(UserService.name, error);
     }

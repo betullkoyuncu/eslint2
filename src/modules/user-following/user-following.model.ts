@@ -1,6 +1,7 @@
 import { literal } from 'sequelize';
 import {
   Column,
+  CreatedAt,
   DataType,
   ForeignKey,
   Model,
@@ -11,6 +12,7 @@ import { UserModel } from '../user/user.model';
 
 @Table({
   tableName: 'user_followings',
+  timestamps: false,
 })
 export class UserFollowingModel extends Model {
   @PrimaryKey
@@ -29,6 +31,7 @@ export class UserFollowingModel extends Model {
   })
   followingId: number;
 
+  @CreatedAt
   @Column({
     type: DataType.DATE,
     allowNull: false,
