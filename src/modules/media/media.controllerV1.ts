@@ -7,8 +7,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 import { SharpPipe } from 'src/pipes/sharp/sharp.pipe';
 
+@ApiTags('media')
 @Controller('api/media/v1')
 export class MediaControllerV1 {
   @Post('upload')
