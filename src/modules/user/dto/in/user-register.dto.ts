@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsOptional,
@@ -8,6 +9,11 @@ import {
 import { i18nValidationMessage } from 'nestjs-i18n';
 
 export class UserRegisterDTO {
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: 'abc@gmail.com',
+  })
   @IsEmail(
     {},
     {
@@ -16,6 +22,11 @@ export class UserRegisterDTO {
   )
   email: string;
 
+  @ApiProperty({
+    type: String,
+    required: true,
+    example: 'Aa123456!',
+  })
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
     message: 'validator.passwordFormat',
   })
@@ -27,6 +38,10 @@ export class UserRegisterDTO {
   })
   password: string;
 
+  @ApiProperty({
+    type: String,
+    required: false,
+  })
   @IsOptional()
   @IsString({
     message: 'validator.isString',

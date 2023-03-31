@@ -11,7 +11,9 @@ import { LocalAuthGuard } from 'src/guards/local-auth.guards';
 import { OptionalJwtAuthGuard } from 'src/guards/optional-jwt-auth.guard';
 import { JwtPayload } from 'src/shared/interfaces';
 import { AuthService } from './auth.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('api/auth/v1')
 export class AuthControllerV1 {
   constructor(private readonly authService: AuthService) {}
