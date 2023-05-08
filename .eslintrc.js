@@ -1,14 +1,24 @@
 module.exports = {
-    "settings": {
-        "node": {
-            "allowModules": ["electron"],
-            "resolvePaths": [__dirname],
-            "tryExtensions": [".js", ".json", ".node"]
-        }
+  settings: {
+    node: {
+      allowModules: ["electron"],
+      resolvePaths: [__dirname],
+      tryExtensions: [".js", ".json", ".node"],
     },
-    "rules": {
-        "node/no-missing-import": "error"
-    }
-}
+    extends: ["eslint:recommended"],
+    parser: "@babel/eslint-parser",
+    parser: "@typescript-eslint/parser",
+    plugins: ["@typescript-eslint"],
+    parserOptions: {
+      ecmaVersion: 2018,
+      sourceType: "module",
 
-
+      rules: {
+        quotes: ["error", "single"],
+        "no-console": "off",
+        semi: "off",
+        "node/no-missing-import": "error",
+      },
+    },
+  },
+};
