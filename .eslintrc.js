@@ -7,7 +7,6 @@ module.exports = {
     },
     extends: ["eslint:recommended"],
     parser: "@babel/eslint-parser",
-    parser: "@typescript-eslint/parser",
     plugins: ["@typescript-eslint"],
     parserOptions: {
       ecmaVersion: 2018,
