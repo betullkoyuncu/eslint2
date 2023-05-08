@@ -17,18 +17,11 @@ module.exports = {
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
-    '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
-    "@typescript-eslint/no-empty-function": "off",
-    'prettier/prettier': [
-      'error',
-      {
-        endOfLine: 'auto',
-      },
-    ],
-    "node/no-missing-import": 'error'
+        "node/no-missing-import": ["error", {
+        "allowModules": [],
+        "resolvePaths": ["/path/to/a/modules/directory"],
+        "tryExtensions": [".js", ".json", ".node"]
+    }]
   },
 };
 
