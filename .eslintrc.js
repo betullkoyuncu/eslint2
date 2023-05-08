@@ -28,5 +28,6 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    "node/no-missing-import": 0
   },
 };
